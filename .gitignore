@@ -1,28 +1,32 @@
+# Ignore everything by default
+*
 
-Output folder/Codebook/
+# Track directories (so Git can check them)
+!*/
 
-Output folder/Figures/
+# Track Stata files
+!*.ado
+	# !*.dta # <-- ignore this
+!*.do
+!*.scheme
+!*.smcl
+!*.sthlp
+!*.stpr
+!*.stsem
+!*.sttcl
 
-*.dta
+# Track R files
+!*.R
+!*.r
+!*.RData
+!*.rds
+!*.rda
+!*.Rproj
+!*.Rmd
+!*.Rnw
 
-*.ppt
+# Ignore the "To File" folder
+/To file/
 
-*.png
-
-*.log
-
-*.xls
-
-*.txt
-
-*.csv
-
-*.rds
-
-*.rtf
-
-*.xlsx
-
-*.pdf
-
-Output folder/W_All/
+# Unignore .gitignore itself
+!.gitignore
