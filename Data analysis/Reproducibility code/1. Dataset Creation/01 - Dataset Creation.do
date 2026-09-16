@@ -11,6 +11,85 @@
 
 display "$S_DATE $S_TIME"
 
+*-----------------------------------------------------------------------------------------------* 
+*>> Macro for children's variables 
+*-----------------------------------------------------------------------------------------------* 
+
+global children_vars 			///
+/// ch002_@						///
+ch005_@							///
+ch006_@							///
+ch007_@							///
+ch007_REG_@						///
+ch007_SHL_adopted_child_@  		///
+ch007_SHL_biological_child_@	///
+ch010_@							///
+ch011_@							///
+ch012_@							///
+ch013_@							///
+ch014_@							///
+ch014_REG_@						///
+ch015_@							///
+ch016_@							///
+ch017_@ 						///
+ch018d10_@ 						///
+ch018d11_@ 						///
+ch018d12_@ 						///
+ch018d13_@ 						///
+ch018d1_@ 						///
+ch018d2_@ 						///
+ch018d3_@ 						///
+ch018d4_@ 						///
+ch018d5_@ 						///
+ch018d6_@ 						///
+ch018d7_@ 						///
+ch018d8_@ 						///
+ch018d95_@ 						///
+ch018d9_@ 						///
+ch018dno_@ 						///
+ch018dot_@ 						///
+ch019_@							///
+ch019_REG_@						///
+ch020_@							///
+ch102_@							///
+ch103_@							///
+ch104_@							///
+ch105_@							///
+ch106_@							///
+ch107_@							///
+ch108_@							///
+ch303d@							///
+ch504_@							///
+ch505_@							///
+ch509d@  						///
+ch510_@  						///
+ch512d@  						///
+ch513_@  						///
+ch513d95_@  					///
+ch513dot_@  					///
+ch515d@							///
+ch516_@							///
+ch518d@							///
+ch519_@							///
+ch520_@							///
+ch525d@							///
+ch526_@							///
+ch_contact_@					///
+ch_gender_@ 					///
+ch_help_out_hh_@ 				///
+ch_hh_receive_care_@			///
+ch_outhh_receive_care_@			///
+ch_pcare_hh_@					///
+ch_proximity_@ 					///
+ch_yrbirth_@ 					///
+child_dead_@ 					///
+childid_@ 						///
+chselch@						///
+isced1997_c@ 					///
+sn_child_loop_@ 				///
+sn_childid_@ 					///
+
+
 
 * ======================================================================= * 
 *	Log file
@@ -1030,7 +1109,23 @@ foreach w of global waves {
 	* Sort the dataset by mergeid and wave 
 	sort mergeid wave 
 
-	* Save the final merged dataset at the person-wave level
+	* Create dyadic IDs for unique identification
+	dyadic_ids
+
+	* Reshape the dataset to long format for dyadic analysis
+	* Identify each child number within families
+	reshape long dyad_@ $children_vars, i(mergeid) j(child_number)
+
+	* Drop dyads with missing information
+	drop if dyad_ == ""
+
+	* Check if dyad and child number combination is unique
+	isid dyad_ child_number
+
+	* Sort the dataset by mergeid and wave 
+	sort dyad_ wave 
+
+	* Save the final merged dataset
 	compress
 	save "$share_all_out/sharew`w'_merged_a.dta", replace
 }
@@ -1049,8 +1144,8 @@ append using "$share_all_out/sharew8_merged_a.dta", force
 append using "$share_all_out/sharew9_merged_a.dta", force 
 append using "$share_wX_cv/sharewX_rel9-0-0_gv_allwaves_cv_r.dta"
 
-// (!) Please note: some sn_childid_* variables may have type mismatches across waves (e.g., byte vs string).
-// 					The "force" option is used below to ignore this numeric/string mismatch.
+// (!) Please note: variable sn_childid_ is byte in master but str1 in using data (waves 4, 6, 
+// 					the "force" option to ignore this numeric/string mismatch.
 // 					The using variable would then be treated as if it contained numeric missing value.
 
 *----	[ 14. Final Save ]-–––––––––––––––––––––––––––––––––––––––––---------------------------------------------*
@@ -1062,7 +1157,7 @@ notes drop _dta
 compress
 
 *>> Sort the dataset 
-sort mergeid wave
+sort dyad_ wave
 
 *>> Final Save 
 save "$share_all_out/SHARE_LONG.dta", replace

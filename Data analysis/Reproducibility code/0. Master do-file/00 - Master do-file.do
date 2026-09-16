@@ -29,10 +29,37 @@ set seed 7212622
 global MASTER_RUNNING 1  // <-- check
 
 
+* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ *
+* >
+* > Programs
+* >
+* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ * 
+
 * ======================================================================= *
-* Program to count number of individuals in the data
+* Program that creates parent-child dyadic IDs
 * ======================================================================= * 
 
+cap program drop dyadic_ids
+program define dyadic_ids
+cap drop dyad_*
+
+foreach n of numlist 1/20 {
+
+	* 	Just add the (double) dash  
+	gen 		dyad_`n' = mergeid+"--"+childid_`n'
+
+	* 	Missing cases 
+	replace 	dyad_`n' = "" if childid_`n' == ""
+	replace 	dyad_`n' = "" if childid_`n' == ""
+}
+
+end
+
+* ======================================================================= *
+* Program that creates parent-child dyadic IDs
+* ======================================================================= * 
+
+* 	Program to count number of individuals in the data
 cap program drop count_ind
 program define count_ind
 cap drop unique_pid
@@ -113,3 +140,5 @@ log using "$log_folder/Timer.log", append
 
 * 	Close eventually open logs
 cap log close
+
+
