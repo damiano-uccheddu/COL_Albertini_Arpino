@@ -346,9 +346,6 @@ label values srh lab_health
 compress
 save "$share_all_out/sharew1_ph.dta", replace 
 
-*	Codebook creation -> you can check comparability using Microsoft Spreadsheet Compare 
-codebookout "$codebook/sharew1_ph.xls", replace
-
 *>>	WAVE 2
 use "$share_w2_in/sharew2_rel9-0-0_ph.dta", clear 	// Open the dataset
 gen wave=2											// Create wave id 
@@ -370,9 +367,6 @@ recode ph044_ (6=5)
 *	Save
 compress
 save "$share_all_out/sharew2_ph.dta", replace 
-	
-*	codebook*
-codebookout "$codebook/sharew2_ph.xls", replace
 
 
 *>>	WAVE 4
@@ -392,9 +386,6 @@ label values srh lab_health
 *	Save
 compress
 save "$share_all_out/sharew4_ph.dta", replace 
-	
-*	codebook*
-codebookout "$codebook/sharew4_ph.xls", replace
 
 
 *>>	WAVE 5
@@ -439,10 +430,6 @@ rename ph089d3 ph010d9
 compress
 save "$share_all_out/sharew5_ph.dta", replace 
 	
-*	codebook*
-codebookout "$codebook/sharew5_ph.xls", replace
-
-
 *>>	WAVE 6
 use "$share_w6_in/sharew6_rel9-0-0_ph.dta", clear 	// Open the dataset 
 gen wave=6											// Create wave id 
@@ -482,8 +469,7 @@ rename ph089d3 ph010d9
 *	Save
 compress
 save "$share_all_out/sharew6_ph.dta", replace 
-*	codebook*
-codebookout "$codebook/sharew6_ph.xls", replace
+
 
 
 *>>	WAVE 7
@@ -525,8 +511,7 @@ rename ph089d3 ph010d9
 *	Save
 compress
 save "$share_all_out/sharew7_ph.dta", replace 
-*	codebook*
-codebookout "$codebook/sharew7_ph.xls", replace
+
 
 *>>	WAVE 8
 use "$share_w8_in/sharew8_rel9-0-0_ph.dta", clear 	// Open the dataset 
@@ -567,8 +552,7 @@ rename ph089d3 ph010d9
 *	Save
 compress
 save "$share_all_out/sharew8_ph.dta", replace 
-*	codebook*
-codebookout "$codebook/sharew8_ph.xls", replace
+
 
 
 
@@ -611,8 +595,7 @@ rename ph089d3 ph010d9
 *	Save
 compress
 save "$share_all_out/sharew9_ph.dta", replace 
-*	codebook*
-codebookout "$codebook/sharew9_ph.xls", replace
+
 
 *----	[  4. Extract & Recode Variables from MH ]---------------------------------------------------------------*
 
@@ -784,9 +767,6 @@ foreach w in $w {
 		* 	Save the processed dataset in a designated output directory
 		compress
 		save "${share_all_out}/sharew`w'_sp.dta", replace 
-
-		*	Codebook
-		codebookout "$codebook/sharew`w'_sp.xls", replace
 	}
 	
 	* 	If the file does not exist, display an error message and skip to the next wave
