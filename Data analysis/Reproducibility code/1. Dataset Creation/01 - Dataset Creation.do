@@ -235,379 +235,6 @@ foreach w of global waves {
 	}
 }
 
-
-*----	[  3. Extract & Recode Variables from PH ]---------------------------------------------------------------*
-
-*>>	WAVE 1
-use "$share_w1_in/sharew1_rel9-0-0_ph.dta", clear 	// Open the dataset
-gen wave=1											// Create wave id 
-
-*	Self-report of health variable (SRH)
-*	wave 1 respondent self-report of health, creation of new variable
-gen srh =.
-replace srh = 1 if ph003_==1 | ph052_==1 // merging the EU version of the variable with the US version
-replace srh = 2 if ph003_==2 | ph052_==2
-replace srh = 3 if ph003_==3 | ph052_==3
-replace srh = 4 if ph003_==4 | ph052_==4
-replace srh = 5 if ph003_==5 | ph052_==5
-
-* 	Defining the label 
-label define lab_health ///
-   1 "1.Excellent"  	///
-   2 "2.Very good" 		///
-   3 "3.Good"			///
-   4 "4.Fair"			///
-   5 "5.Poor"	
-
-* 	Label creation for SRH 
-label variable srh "Self-report of health"
-label values srh lab_health
-
-*	Dataset Save
-compress
-save "$share_all_out/sharew1_ph.dta", replace 
-
-*>>	WAVE 2
-use "$share_w2_in/sharew2_rel9-0-0_ph.dta", clear 	// Open the dataset
-gen wave=2											// Create wave id 
-
-*	wave 2 respondent self-report of health
-gen srh =.
-replace srh = 1 if ph003_==1
-replace srh = 2 if ph003_==2
-replace srh = 3 if ph003_==3
-replace srh = 4 if ph003_==4
-replace srh = 5 if ph003_==5
-label variable srh "Self-report of health"
-label values srh lab_health
-
-*	Recode: "Registered or legally blind" --> POOR Eyesight
-recode ph043_ (6=5)
-recode ph044_ (6=5)
-
-*	Save
-compress
-save "$share_all_out/sharew2_ph.dta", replace 
-
-
-*>>	WAVE 4
-use "$share_w4_in/sharew4_rel9-0-0_ph.dta", clear 	// Open the dataset 
-gen wave=4											// Create wave id 
-
-*	wave 4 respondent self-report of health
-gen srh =.
-replace srh = 1 if ph003_==1
-replace srh = 2 if ph003_==2
-replace srh = 3 if ph003_==3
-replace srh = 4 if ph003_==4
-replace srh = 5 if ph003_==5
-label variable srh "Self-report of health"
-label values srh lab_health
-
-*	Save
-compress
-save "$share_all_out/sharew4_ph.dta", replace 
-
-
-*>>	WAVE 5
-use "$share_w5_in/sharew5_rel9-0-0_ph.dta", clear 	// Open the dataset 
-gen wave=5											// Create wave id 
-
-*	wave 5 respondent self-report of health
-gen srh =.
-replace srh = 1 if ph003_==1
-replace srh = 2 if ph003_==2
-replace srh = 3 if ph003_==3
-replace srh = 4 if ph003_==4
-replace srh = 5 if ph003_==5
-label variable srh "Self-report of health"
-label values srh lab_health
-
-/* (!) Starting in Wave 5, respondents are asked if they have ever had rheumatoid arthritis (ph006d19) or
-osteoarthritis/other rheumatism (ph006d20) as separate questions. FI_arthritis is coded as 1 if the respondent
-indicates having had at least one of the conditions. */
-// fre ph006d19 // Doctor told you had: rheumatoid arthritis
-// fre ph006d20 // Doctor told you had: osteoarthritis/other rheumatism
-
-
-*	(!) Variable "reunification":
-gen ph006d8 = . 
-replace ph006d8 = 0 if ph006d19==0 | ph006d20==0
-replace ph006d8 = 1 if ph006d19==1 | ph006d20==1
-
-/* We can use ph011d11 (Drugs for: osteoporosis) as a proxy for ph006d9 (Doctor told you had: osteoporosis)
-because the question is not asked starting from wave 5. I have seen that in Stoltz et al. they don't mention the problem, 
-but they use the variable "Doctor told you had: Parkinson" to the Frailty Index, instead of "Doctor told you had: 
-osteoporosis" */
-
-rename ph011d11 ph006d9
-
-*	Same variables, different names: 
-rename ph089d1 ph010d7
-rename ph089d2 ph010d8
-rename ph089d3 ph010d9
-
-*	Save
-compress
-save "$share_all_out/sharew5_ph.dta", replace 
-	
-*>>	WAVE 6
-use "$share_w6_in/sharew6_rel9-0-0_ph.dta", clear 	// Open the dataset 
-gen wave=6											// Create wave id 
-
-*	wave 6 respondent self-report of health
-gen srh =.
-replace srh = 1 if ph003_==1
-replace srh = 2 if ph003_==2
-replace srh = 3 if ph003_==3
-replace srh = 4 if ph003_==4
-replace srh = 5 if ph003_==5
-label variable srh "Self-report of health"
-label values srh lab_health
-
-/* (!) Starting in Wave 5, respondents are asked if they have ever had rheumatoid arthritis or
-osteoarthritis/other rheumatism, as separate questions. I will create a new "ph006d8" variable, coded as 1 if the respondent
-indicates having had at least one of the conditions. */
-// fre ph006d19
-// fre ph006d20
-
-*	(!) Variable "reunification":
-gen ph006d8 = . 
-replace ph006d8 = 0 if ph006d19==0 | ph006d20==0
-replace ph006d8 = 1 if ph006d19==1 | ph006d20==1
-
-/* We can use ph011d11 (Drugs for: osteoporosis) as a proxy for ph006d9 (Doctor told you had: osteoporosis)
-because the question is not asked starting from wave 5. I have seen that in Stoltz et al. they don't mention the problem, 
-but they add the variable "Doctor told you had: Parkinson" to the Frailty Index */
-
-rename ph011d11 ph006d9
-
-*	Same variables, different names: 
-rename ph089d1 ph010d7
-rename ph089d2 ph010d8
-rename ph089d3 ph010d9
-
-*	Save
-compress
-save "$share_all_out/sharew6_ph.dta", replace 
-
-
-
-*>>	WAVE 7
-use "$share_w7_in/sharew7_rel9-0-0_ph.dta", clear 	// Open the dataset 
-gen wave=7											// Create wave id 
-
-*	wave 7 respondent self-report of health
-gen srh =.
-replace srh = 1 if ph003_==1
-replace srh = 2 if ph003_==2
-replace srh = 3 if ph003_==3
-replace srh = 4 if ph003_==4
-replace srh = 5 if ph003_==5
-label variable srh "Self-report of health"
-label values srh lab_health
-
-/* (!) Starting in Wave 5, respondents are asked if they have ever had rheumatoid arthritis or
-osteoarthritis/other rheumatism, as separate questions. I will create a new "ph006d8" variable, coded as 1 if the respondent
-indicates having had at least one of the conditions. */
-// fre ph006d19
-// fre ph006d20
-
-*	(!) Variable "reunification":
-gen ph006d8 = . 
-replace ph006d8 = 0 if ph006d19==0 | ph006d20==0
-replace ph006d8 = 1 if ph006d19==1 | ph006d20==1
-
-/* We can use ph011d11 (Drugs for: osteoporosis) as a proxy for ph006d9 (Doctor told you had: osteoporosis)
-because the question is not asked starting from wave 5. I have seen that in Stoltz et al. they don't mention the problem, 
-but they add the variable "Doctor told you had: Parkinson" to the Frailty Index */
-
-rename ph011d11 ph006d9
-
-*	Same variables, different names: 
-rename ph089d1 ph010d7
-rename ph089d2 ph010d8
-rename ph089d3 ph010d9
-
-*	Save
-compress
-save "$share_all_out/sharew7_ph.dta", replace 
-
-
-*>>	WAVE 8
-use "$share_w8_in/sharew8_rel9-0-0_ph.dta", clear 	// Open the dataset 
-gen wave=8											// Create wave id 
-
-*	WAVE 8 respondent self-report of health
-gen srh =.
-replace srh = 1 if ph003_==1
-replace srh = 2 if ph003_==2
-replace srh = 3 if ph003_==3
-replace srh = 4 if ph003_==4
-replace srh = 5 if ph003_==5
-label variable srh "Self-report of health"
-label values srh lab_health
-
-/* (!) Starting in Wave 5, respondents are asked if they have ever had rheumatoid arthritis or
-osteoarthritis/other rheumatism, as separate questions. I will create a new "ph006d8" variable, coded as 1 if the respondent
-indicates having had at least one of the conditions. */
-// fre ph006d19
-// fre ph006d20
-
-*	(!) Variable "reunification":
-gen ph006d8 = . 
-replace ph006d8 = 0 if ph006d19==0 | ph006d20==0
-replace ph006d8 = 1 if ph006d19==1 | ph006d20==1
-
-/* We can use ph011d11 (Drugs for: osteoporosis) as a proxy for ph006d9 (Doctor told you had: osteoporosis)
-because the question is not asked starting from wave 5. I have seen that in Stoltz et al. they don't mention the problem, 
-but they add the variable "Doctor told you had: Parkinson" to the Frailty Index */
-
-rename ph011d11 ph006d9
-
-*	Same variables, different names: 
-rename ph089d1 ph010d7
-rename ph089d2 ph010d8
-rename ph089d3 ph010d9
-
-*	Save
-compress
-save "$share_all_out/sharew8_ph.dta", replace 
-
-
-
-
-*>>	WAVE 9
-use "$share_w9_in/sharew9_rel9-0-0_ph.dta", clear 	// Open the dataset 
-gen wave=9											// Create wave id 
-
-*	WAVE 9 respondent self-report of health
-gen srh =.
-replace srh = 1 if ph003_==1
-replace srh = 2 if ph003_==2
-replace srh = 3 if ph003_==3
-replace srh = 4 if ph003_==4
-replace srh = 5 if ph003_==5
-label variable srh "Self-report of health"
-label values srh lab_health
-
-/* (!) Starting in Wave 5, respondents are asked if they have ever had rheumatoid arthritis or
-osteoarthritis/other rheumatism, as separate questions. I will create a new "ph006d8" variable, coded as 1 if the respondent
-indicates having had at least one of the conditions. */
-// fre ph006d19
-// fre ph006d20
-
-*	(!) Variable "reunification":
-gen ph006d8 = . 
-replace ph006d8 = 0 if ph006d19==0 | ph006d20==0
-replace ph006d8 = 1 if ph006d19==1 | ph006d20==1
-
-/* We can use ph011d11 (Drugs for: osteoporosis) as a proxy for ph006d9 (Doctor told you had: osteoporosis)
-because the question is not asked starting from wave 5. I have seen that in Stoltz et al. they don't mention the problem, 
-but they add the variable "Doctor told you had: Parkinson" to the Frailty Index */
-
-rename ph011d11 ph006d9
-
-*	Same variables, different names: 
-rename ph089d1 ph010d7
-rename ph089d2 ph010d8
-rename ph089d3 ph010d9
-
-*	Save
-compress
-save "$share_all_out/sharew9_ph.dta", replace 
-
-
-*----	[  4. Extract & Recode Variables from MH ]---------------------------------------------------------------*
-
-*>> Define a list of all waves to be processed
-global w "1 2 3 4 5 6 7 8 9"
-
-*>> Loop through each wave defined in the global list
-foreach w in $w {
-
-	*	Display the current wave number being processed
-	di as result "Wave: " as txt "`w'"
-	
-	*	Check if the dataset for the current wave exists in the specified directory
-	*		The 'capture' command suppresses the error message if the file is not found
-	*		The 'confirm file' command checks for the existence of the file
-	cap confirm file "${share_w`w'_in}/sharew`w'_rel9-0-0_mh.dta"
-	
-	*	If the file exists (_rc == 0), then execute the following block
-	if _rc == 0 { // "_rc" is a system variable that stores the return code of the last command executed
-		
-		* Load the dataset for the current wave
-		use "${share_w`w'_in}/sharew`w'_rel9-0-0_mh.dta", clear
-		
-		* Generate a variable 'wave' and assign it the current wave number
-		gen wave=`w'
-
-		* Display the frequency distribution of the 'wave' variable
-		fre wave  
-
-		* Wave-specific transformations (if any)
-		if `w' == 5 {
-
-			*	Recode variables (inconsistence with other waves)
-			recode mh011_ (5=2) (9=3)
-			recode mh003_ (5=2)
-			recode mh016_ (5=2)            
-		}
-
-		* Save the processed dataset in a designated output directory
-		compress
-		save "${share_all_out}/sharew`w'_mh.dta", replace 
-	}
-	
-	* If the file does not exist, display an error message and skip to the next wave
-	else {
-		di as error "File for Wave `w' not found. Skipping..."
-	}
-}
-
-
-
-*----	[  5. Extract & Recode Variables from BR ]---------------------------------------------------------------*
-
-*>> Define a list of all waves to be processed
-global w "1 2 3 4 5 6 7 8 9"
-
-*>> Loop through each wave defined in the global list
-foreach w in $w {
-
-	*	Display the current wave number being processed
-	di as result "Wave: " as txt "`w'"
-	
-	*	Check if the dataset for the current wave exists in the specified directory
-	*		The 'capture' command suppresses the error message if the file is not found
-	*		The 'confirm file' command checks for the existence of the file
-	cap confirm file "${share_w`w'_in}/sharew`w'_rel9-0-0_br.dta"
-	
-	*	If the file exists (_rc == 0), then execute the following block
-	if _rc == 0 { // "_rc" is a system variable that stores the return code of the last command executed
-		
-		* 	Load the dataset for the current wave
-		use "${share_w`w'_in}/sharew`w'_rel9-0-0_br.dta", clear
-		
-		* 	Generate a variable 'wave' and assign it the current wave number
-		gen wave=`w'
-
-		* 	Display the frequency distribution of the 'wave' variable
-		fre wave  
-
-		* 	Save the processed dataset in a designated output directory
-		compress
-		save "${share_all_out}/sharew`w'_br.dta", replace 
-	}
-	
-	* 	If the file does not exist, display an error message and skip to the next wave
-	else {
-		di as error "File for Wave `w' not found. Skipping..."
-	}
-}
-
-
 *----	[  5. Extract & Recode Variables from SP ]---------------------------------------------------------------*
 
 *>> Define a list of all waves to be processed
@@ -699,7 +326,7 @@ foreach w in $w {
 
 
 
-*----	[  7. Extract & Recode Variables from CV_R ]-------------------------------------------------------------*
+*----	[  6. Extract & Recode Variables from CV_R ]-------------------------------------------------------------*
 
 *>> Define a list of all waves to be processed
 global w "1 2 3 4 5 6 7 8 9"
@@ -759,7 +386,7 @@ foreach w in $w {
 }
 
 
-*----	[  8. Extract & Recode Variables from GV_Imputations ]---------------------------------------------------*
+*----	[  7. Extract & Recode Variables from GV_Imputations ]---------------------------------------------------*
 
 *>> Define a list of all waves to be processed
 global w "1 2 3 4 5 6 7 8 9"
@@ -795,17 +422,6 @@ foreach w in $w {
 			fre nchild_rounded
 			sum nchild_rounded
 		 
-		*>> Depression 
-			*	Mean value for Euro-D (based on the 5 SHARE imputed datasets)
-			bys mergeid: egen eurod_mean = mean(eurod) if eurod >= 0
-			fre eurod_mean 
-			sum eurod_mean 
-			
-			*	Round the variable
-			gen eurod_rounded = round(eurod_mean, 1)
-			fre eurod_rounded
-			sum eurod_rounded
-
 		*>> Income  
 			*	Mean value for income (based on the 5 SHARE imputed datasets)
 			bys mergeid: egen income_mean = mean(thinc)
@@ -864,7 +480,7 @@ foreach w in $w {
 }
 
 
-*----	[  9. Extract & Recode Variables from DN ]---------------------------------------------------------------*
+*----	[  8. Extract & Recode Variables from DN ]---------------------------------------------------------------*
 
 *>> Define a list of all waves to be processed
 global w "1 2 3 4 5 6 7 8 9"
@@ -959,7 +575,7 @@ foreach w in $w {
 
 
 
-*---- [ 12. Merge modules per wave ]---------------------------------------------------------------------------*
+*---- [ 10. Merge modules per wave ]---------------------------------------------------------------------------*
 
 * Define all waves to be processed
 global waves "1 2 4 5 6 7 8 9"
@@ -971,7 +587,7 @@ foreach w of global waves {
 	use "$share_all_out/sharew`w'_cv_r.dta", clear 
 
 	* Adjust dataset list based on wave availability for gv_children
-	local datasets "br cf ch dn gv_imputations gv_isced sp"
+	local datasets "cf ch dn gv_imputations gv_isced sp"
 
 	if `w' >= 4 & `w' <= 9 {
 		local datasets "`datasets' gv_children" // Include gv_children only for waves 4, 5, 6, 7, 8, 9
@@ -982,7 +598,7 @@ foreach w of global waves {
 		local datasets "`datasets' sn"
 	}
 	
-	local datasets "`datasets' mh ph technical_variables" // Continue adding other datasets
+	local datasets "`datasets' technical_variables" // Continue adding other datasets
 	
 	* Merge with other datasets for the same wave
 	foreach dataset in `datasets' {
@@ -1039,7 +655,7 @@ foreach w of global waves {
 }
 
 
-*----	[ 13. Append waves to panel long format ]----------------------------------------------------------------*
+*----	[ 11. Append waves to panel long format ]----------------------------------------------------------------*
 
 *	Append single wave files to one long file:
 use          "$share_all_out/sharew1_merged_a.dta", clear
@@ -1056,7 +672,7 @@ append using "$share_wX_cv/sharewX_rel9-0-0_gv_allwaves_cv_r.dta"
 // 					The "force" option is used below to ignore this numeric/string mismatch.
 // 					The using variable would then be treated as if it contained numeric missing value.
 
-*----	[ 14. Final Save ]-–––––––––––––––––––––––––––––––––––––––––---------------------------------------------*
+*----	[ 12. Final Save ]-–––––––––––––––––––––––––––––––––––––––––---------------------------------------------*
 
 *>> Remove any notes
 notes drop _dta
