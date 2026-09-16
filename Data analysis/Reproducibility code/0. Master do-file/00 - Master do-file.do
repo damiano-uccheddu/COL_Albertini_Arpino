@@ -76,7 +76,7 @@ end
 global username "`c(username)'"
 
 *>> Global macro (insert here the working folder where the replication material is stored)
-global working_folder 		"C:/Users/$username/Dropbox/_Research_/_Active_Projects_/COL_Albertini_Arpino/Data analysis/"
+global working_folder 		"C:/Users/$username/Dropbox/_Research_/_Active_Projects_/COL_Albertini_Arpino/Data analysis/Reproducibility code"
 global dataset_in 			"A:/Encrypted datasets/Source"
 global dataset_out			"A:/Encrypted datasets/Derived/COL_Albertini_Arpino"
 
@@ -86,7 +86,7 @@ global dataset_cleaning 		"$working_folder/2. Data Cleaning"
 global main_analysis 			"$working_folder/3. Main Analysis"
 
 *>> Log files 
-global log_folder 			"$working_folder/Output folder/Log folder"
+global log_folder 		"C:/Users/$username/Dropbox/_Research_/_Active_Projects_/COL_Albertini_Arpino/Data analysis/Output folder/Log folder"
 
 *>> Dataset input
 global share_w1_in 		"A:/Encrypted datasets/Source/SHARE/Release 9.0.0/sharew1_rel9-0-0_ALL_datasets_stata" 
@@ -117,7 +117,7 @@ global figure_out 			"$working_folder/Output folder/Figures" //<- here graphs an
 * ======================================================================= * 
 
 *>> 	Dataset Creation
-do "$dataset_creation/[FRS-FNRS_PER] - 02 - Second Paper - Dataset Creation.do"
+do "$dataset_creation/01 - Dataset Creation.do"
 
 *>> 	Data Cleaning
 do "$dataset_cleaning/[FRS-FNRS_PER] - 02 - Second Paper - Data Cleaning.do"
