@@ -56,10 +56,9 @@ foreach n of numlist 1/20 {
 end
 
 * ======================================================================= *
-* Program that creates parent-child dyadic IDs
+* Program to count number of individuals in the data
 * ======================================================================= * 
 
-* 	Program to count number of individuals in the data
 cap program drop count_ind
 program define count_ind
 cap drop unique_pid
@@ -140,5 +139,3 @@ log using "$log_folder/Timer.log", append
 
 * 	Close eventually open logs
 cap log close
-
-
