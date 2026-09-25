@@ -119,10 +119,10 @@ global figure_out 			"$working_folder/Output folder/Figures" //<- here graphs an
 do "$dataset_creation/01 - Dataset Creation.do"
 
 *>> 	Data Cleaning
-do "$dataset_cleaning/[FRS-FNRS_PER] - 02 - Second Paper - Data Cleaning.do"
+do "$dataset_cleaning/02 - Data Cleaning.do"
 
 *>> 	Main analysis
-do "$main_analysis/[FRS-FNRS_PER] - 02 - Second Paper - Main Analysis.do"
+do "$main_analysis/03 - Data Analysis.do"
 
 
 
