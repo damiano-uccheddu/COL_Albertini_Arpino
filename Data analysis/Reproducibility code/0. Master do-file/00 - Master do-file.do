@@ -82,7 +82,7 @@ global dataset_out			"A:/Encrypted datasets/Derived/COL_Albertini_Arpino"
 *>> Folder in which I have the other do-files
 global dataset_creation 		"$working_folder/1. Dataset Creation"
 global dataset_cleaning 		"$working_folder/2. Data Cleaning"
-global main_analysis 			"$working_folder/3. Main Analysis"
+global main_analysis 			"$working_folder/3. Data Analysis"
 
 *>> Log files 
 global log_folder 		"C:/Users/$username/Dropbox/_Research_/_Active_Projects_/COL_Albertini_Arpino/Data analysis/Output folder/Log folder"
